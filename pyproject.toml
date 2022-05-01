@@ -12,7 +12,7 @@ dependencies = []
 
 [project.optional-dependencies]
 test = ["pytest"]
-doc = []
+doc = ["sphinx"]
 linter = ["mypy", "black"]
 
 [project.urls]

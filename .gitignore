@@ -1,3 +1,5 @@
 *.mypy_cache/
 notes.txt
 *.pyc
+*.pytest_cache/
+doc/build/
