@@ -4,6 +4,9 @@ Add more details in time # TODO
 
     Typical usage example
 """
+
+__version__="0.1"
+
 def hello_world()->str:
     """Dummy function to get started
 

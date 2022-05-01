@@ -1,0 +1,20 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "chart_me"
+authors = [{name = "Luke Garzia", email = "garzia.luke@gmail.com"}]
+license = {file = "LICENSE"}
+classifiers = ["License :: OSI Approved :: MIT License"]
+dynamic = ["version", "description"]
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest"]
+doc = []
+linter = ["mypy", "black"]
+
+[project.urls]
+Home = "https://github.com/lgarzia/chart_me"
+
