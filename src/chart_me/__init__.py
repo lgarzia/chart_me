@@ -15,3 +15,5 @@ def hello_world()->str:
     """
     # ! This is just a simple test
     return 'hello world'
+
+from chart_me.chart_me_logic import chart_me #makes function top level

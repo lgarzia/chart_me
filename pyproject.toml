@@ -8,12 +8,13 @@ authors = [{name = "Luke Garzia", email = "garzia.luke@gmail.com"}]
 license = {file = "LICENSE"}
 classifiers = ["License :: OSI Approved :: MIT License"]
 dynamic = ["version", "description"]
-dependencies = []
+dependencies = ['pandas', 'altair']
 
 [project.optional-dependencies]
-test = ["pytest"]
+test = ["pytest", "vega_datasets"]
 doc = ["sphinx"]
 linter = ["mypy", "black"]
+jupyter = ['notebook']
 
 [project.urls]
 Home = "https://github.com/lgarzia/chart_me"
