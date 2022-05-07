@@ -16,3 +16,21 @@ def conftest_basic_dataframe():
     }
     df = pd.DataFrame(data)
     return df
+
+@pytest.fixture
+def conftest_check_agg_dataframe():
+    data = {
+        "unique_vals": [1, 2, 3],
+        "unique_with_nulls": [1.234_523_45, 2.456_234, None],
+        "duplicates": ["rabbit", "leopard", "rabbit"]
+    }
+    df = pd.DataFrame(data)
+    return df
+
+@pytest.fixture
+def conftest_check_agg_dataframe_too_big():
+    data = {
+        "unique_vals": list(range(200))
+    }
+    df = pd.DataFrame(data)
+    return df
