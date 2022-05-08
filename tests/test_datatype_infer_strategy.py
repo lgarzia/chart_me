@@ -21,3 +21,5 @@ def test_preagg_checks_too_big(conftest_check_agg_dataframe_too_big):
     cols = ['unique_vals']
     infer = dti.InferDataTypeStrategyDefault(df, cols)
     assert infer._check_if_preaggregated_data() is False
+
+
