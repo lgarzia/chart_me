@@ -4,7 +4,8 @@
 
 """
 
-from typing import Protocol, Tuple, List, Optional, Type
+from asyncio import create_subprocess_shell
+from typing import Protocol, Tuple, List, Optional, Type, Dict
 import pandas as pd
 
 from enum import Enum
@@ -27,6 +28,7 @@ class ChartMeDataTypeMetaType(Enum):
     QUANTITATIVE = 'Q', #-> Floats
     CATEGORICAL_HIGH_CARDINALITY = 'C-HC', #top-k
     CATEGORICAL_LOW_CARDINALITY = 'C-LC',
+    TEMPORAL = 'T',
     NOT_SUPPORTED_TYPE = 'NA'
 
 # TODO Need to return a dataclass
@@ -36,11 +38,14 @@ class InferDataTypeStrategy(Protocol):
 
 class InferDataTypeStrategyDefault():
 
-    def __init__(self, df:pd.DataFrame, cols:List[str]):
+    def __init__(self, df:pd.DataFrame, cols:List[str], **kwargs):
         self.df = df
         self.cols = cols
         self.preaggregated: Optional[bool] = None
-    
+        self.__dict__.update(kwargs)
+        self.col_to_cm_dtypes: Dict[str, ChartMeDataType] = {}
+        self.col_to_cm_dtypes_meta: Dict[str, ChartMeDataTypeMetaType] = {}
+
     def _check_if_preaggregated_data(self, threshold: int=100):
         """First check determines aggregation - influences data type"""
         if self.df.shape[0] <= threshold:
@@ -92,22 +97,41 @@ class InferDataTypeStrategyDefault():
                 try: 
                     self.df[col] = pd.to_datetime(self.df[col])
                     self.col_to_cm_dtypes[col] = ChartMeDataType.TEMPORAL
-                except (ParserError, TypeError) as error:
+                except (ParserError, TypeError, ValueError) as error:
                     pass
         return self.col_to_cm_dtypes
 
-    def _get_data_infer_meta_type(self, col:str):
+    def _get_data_infer_meta_type_col(self, col:str):
         """series of evaluations"""
-            #
-
-
-        
-        #up first - KEY
+        if self.col_to_cm_dtypes[col] == ChartMeDataType.NOT_SUPPORTED_TYPE:
+            self.col_to_cm_dtypes_meta[col] = ChartMeDataTypeMetaType.NOT_SUPPORTED_TYPE 
+        if self.col_to_cm_dtypes[col] == ChartMeDataType.FLOATS:
+            self.col_to_cm_dtypes_meta[col] = ChartMeDataTypeMetaType.QUANTITATIVE
+        if self.col_to_cm_dtypes[col] == ChartMeDataType.TEMPORAL:
+            self.col_to_cm_dtypes_meta[col] = ChartMeDataTypeMetaType.TEMPORAL
+        if self.col_to_cm_dtypes[col] == ChartMeDataType.INTEGER:
+            #Check if a Key - All Unique and No Nulls
+            if self.df[col].nunique() == self.df[col].shape[0]:
+                self.col_to_cm_dtypes_meta[col] = ChartMeDataTypeMetaType.KEY
+            #Check if a Boolean Value
+            elif (int(self.df[col].min())==0 and int(self.df[col].max())==1 and self.df[col].nunique() == 2):
+                self.col_to_cm_dtypes_meta[col] = ChartMeDataTypeMetaType.BOOLEAN
+            else:
+                self.col_to_cm_dtypes_meta[col] = ChartMeDataTypeMetaType.QUANTITATIVE
+        if self.col_to_cm_dtypes[col] == ChartMeDataType.NOMINAL:
+            hc_threshold = self.__dict__.get('cardinality_threshold_ratio', .10) 
+            #if 100; 10 or less low cardinality
+            if self.df[col].nunique() == self.df[col].shape[0]:
+                self.col_to_cm_dtypes_meta[col] = ChartMeDataTypeMetaType.KEY
+            elif self.df[col].nunique()/self.df.shape[0] <= hc_threshold:
+                self.col_to_cm_dtypes_meta[col] = ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY
+            else:
+                self.col_to_cm_dtypes_meta[col] = ChartMeDataTypeMetaType.CATEGORICAL_HIGH_CARDINALITY
     
-    # def _calculate_if_meta_type_is_key(self, col:str)->bool:
-    #     """Limited to certain data"""
-    #     if data_type == ChartMeDataType.
-
+    def _calculate_data_type_meta(self):
+        for col, val in self.col_to_cm_dtypes.items():
+            self._get_data_infer_meta_type_col(col)
+        return self.col_to_cm_dtypes_meta
 
     @classmethod
     def _override_str_check_if_date(cls, str_vals:Tuple[str]):
