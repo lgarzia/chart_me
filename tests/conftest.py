@@ -61,3 +61,18 @@ def ct_df_override_dtypes():
     }
     df = pd.DataFrame(data)
     return df
+
+@pytest.fixture
+def ct_df_calculate_meta_dtypes():
+    data = {
+        "temporal_t": ['2021-01-01', '2021-02-02', '2021-02-03', '2021-02-04', '2021-02-05'],
+        "integers_b":[0,1,1,0,1],
+        "integers_q": [1.0, 1, 3.0, 4.0, 3.0],
+        "integers_k":[1,2,3,4,5],
+        "floaties_q":[1.2, 2.3, 2.2, 4.5, 5.6],
+        "nominal_lc": ['A', 'B', 'B', 'A', 'B'],
+        "nominal_hc": ['A','A','B','C','D'],
+        "nominal_k": ['A','B','C','D','E'] 
+    }
+    df = pd.DataFrame(data)
+    return df

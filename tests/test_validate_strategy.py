@@ -1,7 +1,9 @@
 """Taking inspiration from PyJanitor on testing Pandas Stuff"""
+from cmath import exp
 from ctypes.wintypes import FLOAT
 from unittest import result
 import chart_me.validate_strategy_configs as vsc
+from chart_me.datatype_infer_strategy_configs import ChartMeDataType, ChartMeDataTypeMetaType
 import pytest
 
 def test_column_does_not_exist_error(conftest_basic_dataframe):
@@ -28,7 +30,7 @@ def test_columns_are_valid(conftest_basic_dataframe, col_names):
     c_validator = vsc.ValidateColumnStrategyDefault(df, col_names)
     assert c_validator.validate_column()
 
-from chart_me.datatype_infer_strategy_configs import ChartMeDataType
+
 
 def test_infer_data_types(ct_df_check_infer_dtypes):
     df = ct_df_check_infer_dtypes
@@ -61,4 +63,25 @@ def test_calculate_override_data_infer_type(ct_df_override_dtypes):
     'inty_integers_w_nulls': ChartMeDataType.INTEGER, 
     'floaty_integers': ChartMeDataType.INTEGER, 
     'string_not_dates': ChartMeDataType.NOMINAL}
+    assert results == expected
+
+
+def test_calculate_data_type_meta(ct_df_calculate_meta_dtypes):
+    df = ct_df_calculate_meta_dtypes
+    cols = df.columns.tolist()
+    from chart_me.datatype_infer_strategy_configs import InferDataTypeStrategyDefault
+    infer = InferDataTypeStrategyDefault(df, cols, cardinality_threshold_ratio=.4)
+    _ = infer._get_raw_data_infer_type()
+    _ = infer._calculate_override_data_infer_type()
+    results = infer._calculate_data_type_meta()
+    expected =  {'temporal_t': ChartMeDataTypeMetaType.TEMPORAL, 
+    'floaties_q': ChartMeDataTypeMetaType.QUANTITATIVE, 
+    'nominal_lc': ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY,
+    'nominal_hc': ChartMeDataTypeMetaType.CATEGORICAL_HIGH_CARDINALITY, 
+    'nominal_k': ChartMeDataTypeMetaType.KEY, 
+    'integers_b': ChartMeDataTypeMetaType.BOOLEAN,
+    'integers_k': ChartMeDataTypeMetaType.KEY,
+    'integers_q': ChartMeDataTypeMetaType.QUANTITATIVE    
+    }
+    print(results)
     assert results == expected
