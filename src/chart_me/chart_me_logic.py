@@ -4,9 +4,8 @@ import altair as alt
 from altair import Chart
 from typing import List, Type
 from chart_me.chart_configs import ChartConfig
-
-from vega_datasets import data
-cars = data.cars()
+from chart_me.datatype_infer_strategy import InferDataTypeStrategyDefault
+from chart_me.charting_assembly_strategy import AssembleChartsStrategyDefault
 
 def chart_me(df:pd.DataFrame, cols: List[str], chart_confs: Type[ChartConfig] = ChartConfig)-> Chart:
     """core function that'll return an Altair Chart to visualize
@@ -24,15 +23,13 @@ def chart_me(df:pd.DataFrame, cols: List[str], chart_confs: Type[ChartConfig] = 
         if len(cols)> 1:
             raise NotImplementedError('only support univariate cases')
         else:
-            # *I know Python is Jump without looking; trying to add a bit of user experience upfront
-            for c in cols:
-                v = chart_confs.validate_column_strategy(df, c)
-                v.validate_column()
-            return alt.Chart(cars).mark_point().encode(
-        x='Horsepower',
-        y='Miles_per_Gallon',
-        color='Origin',
-        ).interactive()
-    else:
-        raise TypeError('Require at least 1 column')    
+            # check inputs - validation strategy
+            # TODO --> need to build this out a bit - I forget
+            # get inferred datatypes
+            infer = InferDataTypeStrategyDefault(df, cols)
+            infer_dtypes = infer.infer_datatypes()
+
+            # get charting strategy
+            assembler = AssembleChartsStrategyDefault(df, cols, infer_dtypes)
+            return assembler.assemble_charts()
 

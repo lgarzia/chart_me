@@ -4,15 +4,11 @@
 
 """
 
-from asyncio import create_subprocess_shell
+from dataclasses import dataclass
 from typing import Protocol, Tuple, List, Optional, Type, Dict
 import pandas as pd
 
 from enum import Enum
-
-from zmq import PROTOCOL_ERROR_ZMTP_MALFORMED_COMMAND_UNSPECIFIED
-# https://altair-viz.github.io/user_guide/encoding.html [Q, O, N, T, G]
-# https://pandas.pydata.org/docs/reference/api/pandas.api.types.infer_dtype.html 
 
 class ChartMeDataType(Enum):
     FLOATS = 'F' #-> Metrics Avg/Media, etc... 
@@ -32,8 +28,14 @@ class ChartMeDataTypeMetaType(Enum):
     NOT_SUPPORTED_TYPE = 'NA'
 
 # TODO Need to return a dataclass
+@dataclass
+class InferedDataTypes():
+    preaggregated: bool
+    chart_me_data_types: Dict[str, ChartMeDataType]
+    chart_me_data_types_meta: Dict[str, ChartMeDataTypeMetaType]
+
 class InferDataTypeStrategy(Protocol):
-    def infer_datatype(self, df:pd.DataFrame, col: str) -> str:
+    def infer_datatypes(self) -> InferedDataTypes:
         raise NotImplementedError
 
 class InferDataTypeStrategyDefault():
@@ -133,13 +135,19 @@ class InferDataTypeStrategyDefault():
             self._get_data_infer_meta_type_col(col)
         return self.col_to_cm_dtypes_meta
 
-    @classmethod
-    def _override_str_check_if_date(cls, str_vals:Tuple[str]):
-        from datetime import datetime
-        try:
-            check_ = [datetime.fromisoformat(d) for d in str_vals]
-            return True
-        except ValueError as e: 
-            return False
+    def infer_datatypes(self) -> InferedDataTypes:
+        """Core function of stategy is returning metadata to rendering engine
 
+        Args:
+            df (pd.DataFrame): pandas dataframe
+            cols (List[str]): list of columns passed in from user
 
+        Returns:
+            InferedDataTypes: describes MetaData to engine
+        """
+        pre_agg_flag = self._check_if_preaggregated_data()
+        _ = self._get_raw_data_infer_type()
+        infered_data_type = self._calculate_override_data_infer_type()
+        infered_data_type_meta = self._calculate_data_type_meta()
+        self.infered_data_types = InferedDataTypes(pre_agg_flag, infered_data_type, infered_data_type_meta)
+        return self.infered_data_types
