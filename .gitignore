@@ -4,3 +4,4 @@ notes.txt
 *.pytest_cache/
 doc/build/
 *.ipynb_checkpoints
+*~$notes_Requirements.xlsx
