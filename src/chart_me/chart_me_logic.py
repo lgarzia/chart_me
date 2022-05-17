@@ -18,18 +18,17 @@ def chart_me(df:pd.DataFrame, cols: List[str], chart_confs: Type[ChartConfig] = 
     Returns:
         alt.Chart: Altair Chart
     """
-    # TODO expand pass univariate
+    
     if cols:
-        if len(cols)> 1:
-            raise NotImplementedError('only support univariate cases')
-        else:
-            # check inputs - validation strategy
-            # TODO --> need to build this out a bit - I forget
-            # get inferred datatypes
-            infer = InferDataTypeStrategyDefault(df, cols)
-            infer_dtypes = infer.infer_datatypes()
+        # TODO check inputs - validation strategy
 
-            # get charting strategy
-            assembler = AssembleChartsStrategyDefault(df, cols, infer_dtypes)
-            return assembler.assemble_charts()
+        # get inferred datatypes
+        infer = InferDataTypeStrategyDefault(df, cols)
+        infer_dtypes = infer.infer_datatypes()
 
+        # get charting strategy
+        assembler = AssembleChartsStrategyDefault(df, cols, infer_dtypes)
+        return assembler.assemble_charts()
+
+    else:
+        return ValueError('need to send a least one column')

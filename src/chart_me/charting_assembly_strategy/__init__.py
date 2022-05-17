@@ -9,6 +9,7 @@ from chart_me.datatype_infer_strategy import InferedDataTypes, ChartMeDataType
 from chart_me.errors import InsufficientValidColumnsError
 
 from .univariate import assemble_univariate_charts
+from .bivariate import assemble_bivariate_charts
 
 class AssembleChartsStrategy(Protocol):
     def assemble_charts(self)->List[alt.Chart]:
@@ -55,7 +56,10 @@ class AssembleChartsStrategyDefault():
                 self.supported_cols.append(c)
         if not len(self.supported_cols):
             raise InsufficientValidColumnsError(f"There's no columns with supported DataType")
-        else:
+        elif len(self.supported_cols) == 1:
             charts = assemble_univariate_charts(self.df, self.supported_cols, self.infered_data_types)
-
+        elif len(self.supported_cols) == 2:
+            charts = assemble_bivariate_charts(self.df, self.supported_cols, self.infered_data_types)
+        else:
+            raise NotImplementedError("Only support two columns at this time")
         return charts
