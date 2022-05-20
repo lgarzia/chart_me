@@ -16,24 +16,35 @@ def assemble_bivariate_charts(df:pd.DataFrame, cols:List[str], infered_data_type
     if len(cols) == 1:
         raise ValueError("This module only supports two valid columns")
     col_name1 = cols[0]
-    col_name2 = cols[1]
-     # TODO need to merge datatype 
-    col_MT1 = infered_data_types.chart_me_data_types_meta[col_name1]
-    col_MT2 = infered_data_types.chart_me_data_types_meta[col_name2]    
+    col_name2 = cols[1] 
+    merged_meta_types = {ChartMeDataTypeMetaType.CATEGORICAL_HIGH_CARDINALITY: ChartMeDataTypeMetaType.KEY, 
+                        ChartMeDataTypeMetaType.BOOLEAN: ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY} 
+    col_MT1 = merged_meta_types.get(infered_data_types.chart_me_data_types_meta[col_name1], infered_data_types.chart_me_data_types_meta[col_name1]) 
+    col_MT2 = merged_meta_types.get(infered_data_types.chart_me_data_types_meta[col_name2], infered_data_types.chart_me_data_types_meta[col_name2])    
     preagg_fl = infered_data_types.preaggregated #doesn't impact behavior for univariate/bivariate
     return_charts = []
-    print(set([col_MT1, col_MT2]) ^ 
-            set([ChartMeDataTypeMetaType.QUANTITATIVE, ChartMeDataTypeMetaType.KEY]))
-    if col_MT1 == ChartMeDataTypeMetaType.QUANTITATIVE \
-        and col_MT2 == ChartMeDataTypeMetaType.QUANTITATIVE:
+
+    if set([col_MT1, col_MT2])  == set([ChartMeDataTypeMetaType.QUANTITATIVE, ChartMeDataTypeMetaType.QUANTITATIVE]):
         return_charts.append(build_scatter_plot(df, col_name1, col_name2))
    
-    elif not (set([col_MT1, col_MT2]) ^ 
-            set([ChartMeDataTypeMetaType.QUANTITATIVE, ChartMeDataTypeMetaType.KEY])):
-        
+    elif set([col_MT1, col_MT2]) == set([ChartMeDataTypeMetaType.QUANTITATIVE, ChartMeDataTypeMetaType.KEY]):
         col_name_x, col_name_y = [col_name2, col_name1] if col_MT1 == ChartMeDataTypeMetaType.KEY else [col_name1, col_name2]
         return_charts.append(build_hbar_value(df.head(), col_name_x, col_name_y))
 
+    elif set([col_MT1, col_MT2]) == set([ChartMeDataTypeMetaType.QUANTITATIVE, ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY]):
+        col_name_n, col_name_q = [col_name1, col_name2] if col_MT1 == ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY else [col_name2, col_name1]
+        if not preagg_fl:
+            return_charts.append(build_facet_histogram(df, col_name_n, col_name_q))
+        from chart_me.pandas_util import pd_group_me
+        agg_dict = {f"{col_name_q}": ['count', 'min', 'max', 'mean', 'median']}
+        df = pd_group_me(df, col_name_n, agg_dict, make_long_form=True)
+        print(df.head(n=2))
+        #return_charts.insert(0, df)
+        #TODO how to store manipulated dataframes to pass back to user
+        return_charts.append(build_facet_hbars(df, col_name_facet="measures", 
+            col_name_y=col_name_n, col_name_x=col_name_q))
+
+    
     else: 
         raise NotImplementedError(f"unknown handling of metatype-{str(col_MT1)}-{str(col_MT2)}")
     return return_charts
@@ -52,4 +63,20 @@ def build_hbar_value(df: pd.DataFrame, col_name_x:str, col_name_y:str):
         x=f'{col_name_x}:Q',
         y=f'{col_name_y}:O'        
     )
+    return chart
+
+def build_facet_histogram(df: pd.DataFrame, col_name_facet: str, col_name_hist_q:str):
+    chart = alt.Chart(df).mark_bar().encode(
+        alt.X(f"{col_name_hist_q}:Q", bin=True), 
+        y='count()', 
+        facet=alt.Facet(f"{col_name_facet}:O", columns=4)
+    )
+    return chart
+
+def build_facet_hbars(df: pd.DataFrame, col_name_facet:str, col_name_y:str, col_name_x:str):
+    chart = alt.Chart(df).mark_bar().encode(
+        x=f'{col_name_x}:Q',
+        y=f'{col_name_y}:O', 
+        facet=alt.Facet(f"{col_name_facet}:O", columns=2)
+    ).resolve_scale(x='independent')
     return chart
