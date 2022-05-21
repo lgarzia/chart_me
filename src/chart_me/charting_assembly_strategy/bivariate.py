@@ -1,3 +1,4 @@
+import imp
 from typing import List, Optional
 from xml.etree.ElementTree import QName
 import pandas as pd
@@ -79,6 +80,17 @@ def assemble_bivariate_charts(df:pd.DataFrame, cols:List[str], infered_data_type
         df['_counts_'] = 1
         df = pd_group_me(df, cols=[col_name_t_m_y, col_name_n], agg_dict={'_counts_':['sum']}, make_long_form=True)
         return_charts.append(build_hconcat_temp_lc_charts(df, col_name_t_m_y, col_name_n, '_counts_'))
+    elif set([col_MT1, col_MT2]) == set([ChartMeDataTypeMetaType.TEMPORAL, ChartMeDataTypeMetaType.TEMPORAL]):
+        col_name_t_m_y1, col_name_t_m_y2 = [f"{col_name1}_m_y", f"{col_name2}_m_y"] 
+        df[col_name_t_m_y1] = pd_truncate_date(df, col_name1)
+        df[col_name_t_m_y2] = pd_truncate_date(df, col_name2)
+        df['__day_diff__'] = (df[col_name1] - df[col_name2]).dt.days
+        from chart_me.charting_assembly_strategy.univariate import build_histogram
+        return_charts.append(build_histogram(df, '__day_diff__'))
+        df['_counts_'] = 1
+        df = pd_group_me(df, cols=[col_name_t_m_y1, col_name_t_m_y2], agg_dict={'_counts_':['sum']}, make_long_form=True)
+        return_charts.append(build_heatmap(df, col_name_t_m_y1, col_name_t_m_y2, '_counts_'))
+
     else: 
         raise NotImplementedError(f"unknown handling of metatype-{str(col_MT1)}-{str(col_MT2)}")
     return return_charts
