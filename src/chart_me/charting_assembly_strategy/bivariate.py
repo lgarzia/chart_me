@@ -60,6 +60,13 @@ def assemble_bivariate_charts(df:pd.DataFrame, cols:List[str], infered_data_type
         agg_dict = {col_name_k: ['count', 'nunique']}
         df = pd_group_me(df, col_name_n, agg_dict, make_long_form=True)
         return_charts.append(build_facet_hbars(df, col_name_facet='measures', col_name_y=col_name_n, col_name_x=col_name_k))
+    elif set([col_MT1, col_MT2]) == set([ChartMeDataTypeMetaType.KEY, ChartMeDataTypeMetaType.TEMPORAL]):
+        col_name_t, col_name_k = [col_name1, col_name2] if col_MT1 == ChartMeDataTypeMetaType.TEMPORAL else [col_name2, col_name1]
+        col_name_t_m_y = f"{col_name_t}_m_y"
+        df[col_name_t_m_y] = pd_truncate_date(df, col_name_t)
+        agg_dict = {col_name_k: ['count', 'nunique']}
+        df = pd_group_me(df, col_name_t_m_y, agg_dict, is_temporal=True, make_long_form=True) 
+        return_charts.append(build_hconcat_temp_charts(df, col_name_t_m_y, col_name_k, 'measures'))
     else: 
         raise NotImplementedError(f"unknown handling of metatype-{str(col_MT1)}-{str(col_MT2)}")
     return return_charts
