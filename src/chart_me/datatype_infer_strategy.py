@@ -121,7 +121,8 @@ class InferDataTypeStrategyDefault():
             else:
                 self.col_to_cm_dtypes_meta[col] = ChartMeDataTypeMetaType.QUANTITATIVE
         if self.col_to_cm_dtypes[col] == ChartMeDataType.NOMINAL:
-            hc_threshold = self.__dict__.get('cardinality_threshold_ratio', .10) 
+             
+            hc_threshold = self.__dict__.get('cardinality_threshold_ratio', .30) if self.preaggregated else self.__dict__.get('cardinality_threshold_ratio', .10)
             #if 100; 10 or less low cardinality
             if self.df[col].nunique() == self.df[col].shape[0]:
                 self.col_to_cm_dtypes_meta[col] = ChartMeDataTypeMetaType.KEY
