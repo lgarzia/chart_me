@@ -67,6 +67,12 @@ def assemble_bivariate_charts(df:pd.DataFrame, cols:List[str], infered_data_type
         agg_dict = {col_name_k: ['count', 'nunique']}
         df = pd_group_me(df, col_name_t_m_y, agg_dict, is_temporal=True, make_long_form=True) 
         return_charts.append(build_hconcat_temp_charts(df, col_name_t_m_y, col_name_k, 'measures'))
+    elif set([col_MT1, col_MT2]) == set([ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY, ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY]):
+        print('here')
+        df['_counts_'] = 1
+        df = pd_group_me(df, cols=[col_name1, col_name2], agg_dict={'_counts_':['sum']}, make_long_form=True)
+        print(df)
+        return_charts.append(build_heatmap(df, col_name1, col_name2, '_counts_'))
     else: 
         raise NotImplementedError(f"unknown handling of metatype-{str(col_MT1)}-{str(col_MT2)}")
     return return_charts
@@ -129,3 +135,10 @@ def build_hconcat_temp_charts(df: pd.DataFrame, col_name_y_m, col_name_q, col_na
     )
     return alt.hconcat(chart1, chart2)
 
+def build_heatmap(df: pd.DataFrame, col_name_x:str, col_name_y:str, col_name_q:str)-> alt.Chart:
+    chart = alt.Chart(df).mark_rect().encode(
+        x=f"{col_name_x}:O", 
+        y=f"{col_name_y}:O",
+        color=f"{col_name_q}:Q"
+    )    
+    return chart 
