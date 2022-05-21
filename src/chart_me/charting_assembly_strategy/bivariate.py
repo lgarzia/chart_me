@@ -22,6 +22,7 @@ def assemble_bivariate_charts(df:pd.DataFrame, cols:List[str], infered_data_type
                         ChartMeDataTypeMetaType.BOOLEAN: ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY} 
     col_MT1 = merged_meta_types.get(infered_data_types.chart_me_data_types_meta[col_name1], infered_data_types.chart_me_data_types_meta[col_name1]) 
     col_MT2 = merged_meta_types.get(infered_data_types.chart_me_data_types_meta[col_name2], infered_data_types.chart_me_data_types_meta[col_name2])    
+    print(col_MT1, col_MT2)
     preagg_fl = infered_data_types.preaggregated #doesn't impact behavior for univariate/bivariate
     return_charts = []
 
@@ -50,12 +51,15 @@ def assemble_bivariate_charts(df:pd.DataFrame, cols:List[str], infered_data_type
         agg_dict = {col_name_q: ['count', 'min', 'max', 'mean', 'median']}
         df = pd_group_me(df, col_name_t_m_y, agg_dict, is_temporal=True, make_long_form=True) 
         return_charts.append(build_hconcat_temp_charts(df, col_name_t_m_y, col_name_q, 'measures'))
-    elif set([col_MT1, col_MT2]) == set([ChartMeDataTypeMetaType.KEY, ChartMeDataTypeMetaType.KEY]):
-        #Key pairing - not much to do here
-        
+    elif set([col_MT1, col_MT2]) == set([ChartMeDataTypeMetaType.KEY, ChartMeDataTypeMetaType.KEY]):    
         df['quantity'] = 1
-        df['label'] = df["floaties_key"].astype(str) + '-' + df["stringy_key"].astype(str)
+        df['label'] = df[col_name1].astype(str) + '-' + df[col_name2].astype(str)
         return_charts.append(build_hbar_value(df.head(n=20), col_name_x='quantity', col_name_y='label'))
+    elif set([col_MT1, col_MT2]) == set([ChartMeDataTypeMetaType.KEY, ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY]):
+        col_name_n, col_name_k =  [col_name1, col_name2] if col_MT1 == ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY else [col_name2, col_name1]
+        agg_dict = {col_name_k: ['count', 'nunique']}
+        df = pd_group_me(df, col_name_n, agg_dict, make_long_form=True)
+        return_charts.append(build_facet_hbars(df, col_name_facet='measures', col_name_y=col_name_n, col_name_x=col_name_k))
     else: 
         raise NotImplementedError(f"unknown handling of metatype-{str(col_MT1)}-{str(col_MT2)}")
     return return_charts
