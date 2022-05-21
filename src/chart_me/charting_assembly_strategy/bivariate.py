@@ -50,6 +50,12 @@ def assemble_bivariate_charts(df:pd.DataFrame, cols:List[str], infered_data_type
         agg_dict = {col_name_q: ['count', 'min', 'max', 'mean', 'median']}
         df = pd_group_me(df, col_name_t_m_y, agg_dict, is_temporal=True, make_long_form=True) 
         return_charts.append(build_hconcat_temp_charts(df, col_name_t_m_y, col_name_q, 'measures'))
+    elif set([col_MT1, col_MT2]) == set([ChartMeDataTypeMetaType.KEY, ChartMeDataTypeMetaType.KEY]):
+        #Key pairing - not much to do here
+        
+        df['quantity'] = 1
+        df['label'] = df["floaties_key"].astype(str) + '-' + df["stringy_key"].astype(str)
+        return_charts.append(build_hbar_value(df.head(n=20), col_name_x='quantity', col_name_y='label'))
     else: 
         raise NotImplementedError(f"unknown handling of metatype-{str(col_MT1)}-{str(col_MT2)}")
     return return_charts
@@ -111,3 +117,4 @@ def build_hconcat_temp_charts(df: pd.DataFrame, col_name_y_m, col_name_q, col_na
         color = 'measures'
     )
     return alt.hconcat(chart1, chart2)
+
