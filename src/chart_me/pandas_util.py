@@ -12,7 +12,7 @@ def pd_group_me(df:pd.DataFrame, cols:Union[List[str], str], agg_dict:Dict, is_t
     df = df.groupby(cols).agg(agg_dict).reset_index()
     key_cols = [f"{k}-{i}" for k in agg_dict.keys() for i in agg_dict[k]]
     sort_key = [key_cols][0]
-    df.columns = list([cols]) + list(key_cols)
+    df.columns = (list([cols]) if isinstance(cols, str) else list(cols)) + list(key_cols)   
     if is_temporal:
         df = df.sort_values(list([cols]), ascending=True)
     else:
@@ -25,3 +25,4 @@ def pd_group_me(df:pd.DataFrame, cols:Union[List[str], str], agg_dict:Dict, is_t
 #https://pandas.pydata.org/docs/reference/api/pandas.Series.dt.to_period.html
 def pd_truncate_date(df: pd.DataFrame, col:str) -> pd.Series:
     return df[col].dt.to_period('M').astype(str)
+
