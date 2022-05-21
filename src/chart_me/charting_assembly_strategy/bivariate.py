@@ -68,11 +68,17 @@ def assemble_bivariate_charts(df:pd.DataFrame, cols:List[str], infered_data_type
         df = pd_group_me(df, col_name_t_m_y, agg_dict, is_temporal=True, make_long_form=True) 
         return_charts.append(build_hconcat_temp_charts(df, col_name_t_m_y, col_name_k, 'measures'))
     elif set([col_MT1, col_MT2]) == set([ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY, ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY]):
-        print('here')
         df['_counts_'] = 1
         df = pd_group_me(df, cols=[col_name1, col_name2], agg_dict={'_counts_':['sum']}, make_long_form=True)
         print(df)
         return_charts.append(build_heatmap(df, col_name1, col_name2, '_counts_'))
+    elif set([col_MT1, col_MT2]) == set([ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY, ChartMeDataTypeMetaType.TEMPORAL]):
+        col_name_t, col_name_n = [col_name1, col_name2] if col_MT1 == ChartMeDataTypeMetaType.TEMPORAL else [col_name2, col_name1]
+        col_name_t_m_y = f"{col_name_t}_m_y"
+        df[col_name_t_m_y] = pd_truncate_date(df, col_name_t)
+        df['_counts_'] = 1
+        df = pd_group_me(df, cols=[col_name_t_m_y, col_name_n], agg_dict={'_counts_':['sum']}, make_long_form=True)
+        return_charts.append(build_hconcat_temp_lc_charts(df, col_name_t_m_y, col_name_n, '_counts_'))
     else: 
         raise NotImplementedError(f"unknown handling of metatype-{str(col_MT1)}-{str(col_MT2)}")
     return return_charts
@@ -142,3 +148,19 @@ def build_heatmap(df: pd.DataFrame, col_name_x:str, col_name_y:str, col_name_q:s
         color=f"{col_name_q}:Q"
     )    
     return chart 
+
+def build_hconcat_temp_lc_charts(df: pd.DataFrame, col_name_t_y_m:str, col_name_n:str, col_name_q:str)->alt.HConcatChart:
+    
+    chart1 = alt.Chart(df).mark_bar().encode(
+        x=f"{col_name_t_y_m}:O", 
+        y=f"{col_name_q}:Q",
+        color=col_name_n
+    )
+
+    chart2 = alt.Chart(df).mark_bar().encode(
+        x=f"{col_name_t_y_m}:O", 
+        y=alt.Y(f"{col_name_q}:Q", stack="normalize"),
+        color=col_name_n
+    )
+
+    return alt.hconcat(chart1, chart2)
