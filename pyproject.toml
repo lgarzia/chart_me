@@ -11,10 +11,9 @@ dynamic = ["version", "description"]
 dependencies = ['pandas', 'altair']
 
 [project.optional-dependencies]
-test = ["pytest", "vega_datasets"]
-doc = ["sphinx"]
+test = ["pytest", "vega_datasets", "notebook"]
+doc = ["sphinx", "myst-nb", "sphinx-rtd-theme", "sphinx-autoapi"]
 linter = ["mypy", "black"]
-jupyter = ['notebook']
 
 [project.urls]
 Home = "https://github.com/lgarzia/chart_me"

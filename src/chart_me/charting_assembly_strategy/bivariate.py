@@ -23,7 +23,6 @@ def assemble_bivariate_charts(df:pd.DataFrame, cols:List[str], infered_data_type
                         ChartMeDataTypeMetaType.BOOLEAN: ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY} 
     col_MT1 = merged_meta_types.get(infered_data_types.chart_me_data_types_meta[col_name1], infered_data_types.chart_me_data_types_meta[col_name1]) 
     col_MT2 = merged_meta_types.get(infered_data_types.chart_me_data_types_meta[col_name2], infered_data_types.chart_me_data_types_meta[col_name2])    
-    print(col_MT1, col_MT2)
     preagg_fl = infered_data_types.preaggregated #doesn't impact behavior for univariate/bivariate
     return_charts = []
 
@@ -40,7 +39,6 @@ def assemble_bivariate_charts(df:pd.DataFrame, cols:List[str], infered_data_type
             return_charts.append(build_facet_histogram(df, col_name_n, col_name_q))
         agg_dict = {f"{col_name_q}": ['count', 'min', 'max', 'mean', 'median']}
         df = pd_group_me(df, col_name_n, agg_dict, make_long_form=True)
-        print(df.head(n=2))
         #return_charts.insert(0, df)
         #TODO how to store manipulated dataframes to pass back to user
         return_charts.append(build_facet_hbars(df, col_name_facet="measures", 
@@ -71,7 +69,6 @@ def assemble_bivariate_charts(df:pd.DataFrame, cols:List[str], infered_data_type
     elif set([col_MT1, col_MT2]) == set([ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY, ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY]):
         df['_counts_'] = 1
         df = pd_group_me(df, cols=[col_name1, col_name2], agg_dict={'_counts_':['sum']}, make_long_form=True)
-        print(df)
         return_charts.append(build_heatmap(df, col_name1, col_name2, '_counts_'))
     elif set([col_MT1, col_MT2]) == set([ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY, ChartMeDataTypeMetaType.TEMPORAL]):
         col_name_t, col_name_n = [col_name1, col_name2] if col_MT1 == ChartMeDataTypeMetaType.TEMPORAL else [col_name2, col_name1]
