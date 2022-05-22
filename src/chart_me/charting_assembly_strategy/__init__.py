@@ -1,4 +1,15 @@
-"""At this time - assume columns validated and inferred data types collected"""
+"""Module Defines the AssembleChartsStrategy Protocol, as well as, a Default Implementation of Chart Assembly Logic
+
+The AssembleChartsStrategy Protocal requires one method - assemble_charts that return a list of 
+High Level Altair Charts or Compound Chart. The AssembleChartStrategy expects
+two MetaData Objects InferedDataTypes that specificy metadata about columns in the 
+dataframe. 
+
+    Typical usage example:
+
+    assembler = AssembleChartsStrategyDefault(df, cols, infer_dtypes)
+    charts = assembler.assemble_charts()
+"""
 import imp
 from typing import Protocol, List, Optional, Union
 import altair as alt
@@ -12,27 +23,36 @@ from .univariate import assemble_univariate_charts
 from .bivariate import assemble_bivariate_charts
 
 class AssembleChartsStrategy(Protocol):
-    def assemble_charts(self)->List[alt.Chart]:
-        """Core engine to turn data and metadata into visualizations
+    """Defines the protocol type for AssembleChartsStrategy 
+    
+    Protocal requires 1 method --- assemble_charts
+    """
+    def assemble_charts(self)->List[Union[alt.Chart, alt.HConcatChart]]:
+        """Defines Protocal Type for AssembleChartsStrategy
 
         Args:
             df (pd.DataFrame): 
-            cols (List[str]): at least 1 and no more then 4 at this time
+            cols (List[str]): at least 1 and no more then 2 at this time
             infered_data_types (InferedDataTypes): metadata required to guide Altair rules
 
         Returns:
-            List[alt.Chart]: return a list of Altair visuals to be rendered
+            List[Union[alt.Chart, alt.HConcatChart]]: return a list of Altair visuals to be rendered
         """
 
 class AssembleChartsStrategyDefault():
+    """Default implementation of AssembleChartsStrategy
 
+    Default implementation strategy provided by chart_me. The core logic is
+    provided by seperate modules depending on number of columns provided - so far
+    2 are build univariate & bivariate. More then 2 columns will throw an error
+    """
     def __init__(self, df:pd.DataFrame, cols:List[str], infered_data_types:InferedDataTypes, **kwargs) -> None:
-        """_summary_
+        """Init Default Assemble Charts Strategy Object
 
         Args:
-            df (pd.DataFrame): 
-            cols (List[str]): at least 1 and no more then 4 at this time
-            infered_data_types (InferedDataTypes): metadata required to guide Altair rules
+            df: dataframe 
+            cols: column names at least 1 and no more then 2 at this time
+            infered_data_types: An InferedDataTypes instance containing metadata required to guide Altair rules
         """
         self.df = df
         self.user_provided_cols = cols
@@ -44,10 +64,16 @@ class AssembleChartsStrategyDefault():
         """assembles charts based on columns count
 
         Returns:
-            List[alt.Chart]: return list of charts to display
+            A list of Altair Chart/Compound charts to display
+
+        Raises:
+            InsufficientValidColumnsError: Will occur if no columns available after 
+                removing unsupported types. 
+            NotImplementedError: Only support 1 or 2 columns at this time
+
         """
-        # TODO preprocess ---> remove 'NOT_SUPPORTED_TYPE -> if zeros out columns return Error
-        self.supported_cols = []
+       
+        self.supported_cols:List[Union[alt.Chart, alt.HConcatChart]] = []
         #logic is predicated on number of columns & preaggregated status
         for c in self.user_provided_cols:
             if self.infered_data_types.chart_me_data_types[c] == ChartMeDataType.NOT_SUPPORTED_TYPE:

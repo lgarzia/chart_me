@@ -1,17 +1,30 @@
-"""Module for managing univariate use cases!"""
-from typing import List, Optional
+"""Default implementation for single variable charting
+
+This module contains all the logic to go from Metadata to actual charts
+See supporting documentation that discusses the rules engine. 
+
+    Typical usage example:
+
+    charts = assemble_univariate_charts(df, [col1], infered_data_types)
+"""
+from typing import List, Optional, Union
 import pandas as pd
 import altair as alt
-from functools import singledispatch
-from chart_me.datatype_infer_strategy import InferedDataTypes, ChartMeDataType, ChartMeDataTypeMetaType
+from chart_me.datatype_infer_strategy import InferedDataTypes, ChartMeDataTypeMetaType
 
-def assemble_univariate_charts(df:pd.DataFrame, cols:List[str], infered_data_types:InferedDataTypes, **kwargs)-> Optional[List[alt.Chart]]:
+def assemble_univariate_charts(df:pd.DataFrame, cols:List[str], infered_data_types:InferedDataTypes, **kwargs)-> List[Union[alt.Chart, alt.HConcatChart]]:
     """Delegated Function to Manage Univariate Use Cases
 
     Args:
-        df (pd.DataFrame): 
-        cols (List[str]): 
-        infered_data_types (InferedDataTypes):
+        df: dataframe 
+        cols: a single column name in a list 
+        infered_data_types: An instance of InferedDataTypes object
+    
+    Returns:
+        List of altair charts or compounds charts
+
+    Raises:
+        ValueError if called with more then one column
     """
     if len(cols) != 1:
         raise ValueError("Only suport single column")
@@ -46,7 +59,7 @@ def assemble_univariate_charts(df:pd.DataFrame, cols:List[str], infered_data_typ
 
 
 def build_hbar_agg(df: pd.DataFrame, col_name:str, agg_name:str)->alt.Chart:
-    print('in here')
+    """An implementation of horizontal bar chart"""
     chart = alt.Chart(df).mark_bar().encode(
         x=f"{agg_name}:Q", 
         y=f"{col_name}:O"
@@ -54,7 +67,7 @@ def build_hbar_agg(df: pd.DataFrame, col_name:str, agg_name:str)->alt.Chart:
     return chart
 
 def build_vbar_agg(df: pd.DataFrame, col_name:str, agg_name:str)->alt.Chart:
-    print(f'{col_name}-{agg_name}')
+    """An implementation of vertical bar chart"""
     chart = alt.Chart(df).mark_bar().encode(
         x=f"{col_name}:O",
         y=f"{agg_name}:Q" 
@@ -62,6 +75,7 @@ def build_vbar_agg(df: pd.DataFrame, col_name:str, agg_name:str)->alt.Chart:
     return chart
 
 def build_histogram(df:pd.DataFrame, col_name:str)->alt.Chart:
+    """An implementation of histogram chart"""
     chart = alt.Chart(df).mark_bar().encode(
         alt.X(f"{col_name}:Q", bin=True),
         y='count()'

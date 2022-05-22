@@ -1,36 +1,38 @@
-"""module for main function """
+"""contains core chart_me function """
 import pandas as pd
 import altair as alt
-from altair import Chart
 from typing import List, Type, Union
 from chart_me.chart_configs import ChartConfig
-from chart_me.datatype_infer_strategy import InferDataTypeStrategyDefault
-from chart_me.charting_assembly_strategy import AssembleChartsStrategyDefault
 
-def chart_me(df:pd.DataFrame, *col_args:str, chart_confs: Type[ChartConfig] = ChartConfig)-> Chart:
-    """core function that'll return an Altair Chart to visualize
+
+def chart_me(df:pd.DataFrame, *col_args:str, chart_confs: Type[ChartConfig] = ChartConfig)-> None:
+    """validates, infers data type, assembles and displays charts
 
     Args:
-        df (pd.DataFrame): Base Dataset
-        *cols (List[str]): Represent column names in pandas dataframe of interest
-        chart_confs (_type_, optional): Manages all settings for Chart creations. Defaults to ChartConfig:ChartConfig.
+        df: pandas dataframe
+        cols_args: position only collection of column names to render # TODO - opportunity to make more robust (str matching)
+        chart_confs: Manages all settings for Chart creations. Defaults to chart_config.ChartConfig - 
+            defines three classes validate_column_strategy, datatype_infer_strategy, assemble_charts_strategy
 
-    Returns:
-        alt.Chart: Altair Chart
+    Raises:
+        ValueError: check number of columns
     """
+
     cols:List[str] = list(col_args) #appears arguments for position only is Tuple -> logic expects to pass list of columns
     if cols:
-        # TODO check inputs - validation strategy
+        for c in cols:
+            #will raise an error if insufficient
+            chart_confs.validate_column_strategy(df, c).validate_column() 
 
         # get inferred datatypes
-        infer = InferDataTypeStrategyDefault(df, cols)
+        infer = chart_confs.datatype_infer_strategy(df, cols)
         infer_dtypes = infer.infer_datatypes()
 
         # get charting strategy
-        assembler = AssembleChartsStrategyDefault(df, cols, infer_dtypes)
+        assembler = chart_confs.assemble_charts_strategy(df, cols, infer_dtypes)
         charts_ = assembler.assemble_charts()
         for c in charts_:
             c.display() 
 
     else:
-        return ValueError('need to send a least one column')
+        raise ValueError('need to send a least one column')

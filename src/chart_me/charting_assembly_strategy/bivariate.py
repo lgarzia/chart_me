@@ -1,19 +1,31 @@
-import imp
+"""Default implementation for bivariate variable charting
+
+This module contains all the logic to go from Metadata to actual charts
+See supporting documentation that discusses the rules engine. 
+
+    Typical usage example:
+
+    charts = assemble_bivariate_charts(df, [col1, col2], infered_data_types)
+"""
 from typing import List, Optional
-from xml.etree.ElementTree import QName
 import pandas as pd
 import altair as alt
-from functools import singledispatch
-from chart_me.datatype_infer_strategy import InferedDataTypes, ChartMeDataType, ChartMeDataTypeMetaType
+from chart_me.datatype_infer_strategy import InferedDataTypes, ChartMeDataTypeMetaType
 from chart_me.pandas_util import pd_group_me, pd_truncate_date
 
-def assemble_bivariate_charts(df:pd.DataFrame, cols:List[str], infered_data_types:InferedDataTypes, **kwargs)-> Optional[List[alt.Chart]]:
-    """Delegated Function to Manage Univariate Use Cases
+def assemble_bivariate_charts(df:pd.DataFrame, cols:List[str], infered_data_types:InferedDataTypes, **kwargs)-> List[alt.Chart. alt.HConcatChart]:
+    """Delegated Function to Manage Bivariate Use Cases
 
     Args:
-        df (pd.DataFrame): 
-        cols (List[str]): 
-        infered_data_types (InferedDataTypes):
+        df: dataframe 
+        cols: a list of two columns
+        infered_data_types: An instance of InferedDataTypes object
+
+    Returns: 
+        List of altair charts or compounds charts
+
+    Raises:
+        ValueError if called with len of cols != 2
     """
     if len(cols) == 1:
         raise ValueError("This module only supports two valid columns")
@@ -92,23 +104,24 @@ def assemble_bivariate_charts(df:pd.DataFrame, cols:List[str], infered_data_type
         raise NotImplementedError(f"unknown handling of metatype-{str(col_MT1)}-{str(col_MT2)}")
     return return_charts
 
-def build_scatter_plot(df: pd.DataFrame, col_name1: str, col_name2:str):
-
+def build_scatter_plot(df: pd.DataFrame, col_name1: str, col_name2:str) -> alt.Chart:
+    """An implementation of scatter plot"""
     chart = alt.Chart(df).mark_point().encode(
         x=f'{col_name1}:Q', 
         y=f'{col_name2}:Q'
     )
     return chart
 
-def build_hbar_value(df: pd.DataFrame, col_name_x:str, col_name_y:str):
-    """Idea is to track keys"""
+def build_hbar_value(df: pd.DataFrame, col_name_x:str, col_name_y:str) -> alt.Chart:
+    """An implementation of horizontal bar chart"""
     chart = alt.Chart(df).mark_bar().encode(
         x=f'{col_name_x}:Q',
         y=f'{col_name_y}:O'        
     )
     return chart
 
-def build_facet_histogram(df: pd.DataFrame, col_name_facet: str, col_name_hist_q:str):
+def build_facet_histogram(df: pd.DataFrame, col_name_facet: str, col_name_hist_q:str)-> alt.Chart:
+    """An implementation of histogram faceted by nominal variable"""
     chart = alt.Chart(df).mark_bar().encode(
         alt.X(f"{col_name_hist_q}:Q", bin=True), 
         y='count()', 
@@ -116,7 +129,8 @@ def build_facet_histogram(df: pd.DataFrame, col_name_facet: str, col_name_hist_q
     )
     return chart
 
-def build_facet_hbars(df: pd.DataFrame, col_name_facet:str, col_name_y:str, col_name_x:str):
+def build_facet_hbars(df: pd.DataFrame, col_name_facet:str, col_name_y:str, col_name_x:str)-> alt.Chart:
+    """An implementation of horizontal bar graph faceted by nominal variable"""
     chart = alt.Chart(df).mark_bar().encode(
         x=f'{col_name_x}:Q',
         y=f'{col_name_y}:O', 
@@ -125,16 +139,9 @@ def build_facet_hbars(df: pd.DataFrame, col_name_facet:str, col_name_y:str, col_
     return chart
 
 def build_hconcat_temp_charts(df: pd.DataFrame, col_name_y_m, col_name_q, col_name_measure:str = 'measures')-> alt.HConcatChart:
-    """Assumes processing through pd_group_me to separate count from other aggregations
+    """An implementation of horizontal bar graph faceted by nominal variable
 
-    Args:
-        df (pd.DataFrame): _description_
-        col_name_y_m (_type_): _description_
-        col_name_q (_type_): _description_
-        col_name_measure (str, optional): _description_. Defaults to 'measures'.
-
-    Returns:
-        alt.HConcatChart: _description_
+    WARNING: Function assumes processing through pd_group_me to separate count from other aggregations
     """
     df_cnt = df[df[col_name_measure] == "count"]
     df_msr = df[df[col_name_measure] != "count"]
@@ -151,6 +158,7 @@ def build_hconcat_temp_charts(df: pd.DataFrame, col_name_y_m, col_name_q, col_na
     return alt.hconcat(chart1, chart2)
 
 def build_heatmap(df: pd.DataFrame, col_name_x:str, col_name_y:str, col_name_q:str)-> alt.Chart:
+    """An implementation of heatmap"""
     chart = alt.Chart(df).mark_rect().encode(
         x=f"{col_name_x}:O", 
         y=f"{col_name_y}:O",
@@ -159,7 +167,11 @@ def build_heatmap(df: pd.DataFrame, col_name_x:str, col_name_y:str, col_name_q:s
     return chart 
 
 def build_hconcat_temp_lc_charts(df: pd.DataFrame, col_name_t_y_m:str, col_name_n:str, col_name_q:str)->alt.HConcatChart:
+    """An implementation that returns two charts to trend nominal and relative values over time
     
+    chart 1-> bar trend chart
+    chart 2-> stacked bar chart
+    """    
     chart1 = alt.Chart(df).mark_bar().encode(
         x=f"{col_name_t_y_m}:O", 
         y=f"{col_name_q}:Q",
