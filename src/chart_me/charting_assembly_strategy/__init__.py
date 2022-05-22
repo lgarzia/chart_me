@@ -1,6 +1,6 @@
 """At this time - assume columns validated and inferred data types collected"""
 import imp
-from typing import Protocol, List, Optional
+from typing import Protocol, List, Optional, Union
 import altair as alt
 import pandas as pd
 import warnings
@@ -40,7 +40,7 @@ class AssembleChartsStrategyDefault():
         self.infered_data_types = infered_data_types
         self.__dict__.update(kwargs)
 
-    def assemble_charts(self)-> Optional[List[alt.Chart]]:
+    def assemble_charts(self)-> List[Union[alt.Chart, alt.HConcatChart]]:
         """assembles charts based on columns count
 
         Returns:

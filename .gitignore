@@ -2,6 +2,6 @@
 notes.txt
 *.pyc
 *.pytest_cache/
-doc/build/
+docs/build/
 *.ipynb_checkpoints
 *~$notes_Requirements.xlsx

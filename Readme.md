@@ -1,14 +1,26 @@
-## Welcome to _Chart Me_ Library
+# Welcome to _Chart Me_ Library - Package ReadMe
 
 This package is inspired by desire to speed up my EDA process in Python.
-
 The big idea is creating a Tableau like experience within Python Jupyter Notebook.
-
 For instance - in Tableau - I can add two pills and chart is auto-generated.
 
-The vision is a follows:
+## Installation
 
-`cm.chart_me(df, ['var1', 'var2'])`
+```bash
+$ pip install chart_me
+```
+
+## Usage
+
+`chart_me` used to quickly generate visualizations during eda process
+
+```python
+import chart_me as ce
+ce.chart_me(df, 'col_1', 'col_2') #<-- reads as c-e-chart_me
+
+```
+
+## Motivation
 
 Results is a series of chart with sensible defaults based on datatypes
 

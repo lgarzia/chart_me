@@ -1,0 +1,2 @@
+https://github.com/readthedocs/sphinx-autoapi
+https://github.com/TomasBeuzen/pycounts/blob/main/docs/conf.py
