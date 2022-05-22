@@ -1,24 +1,35 @@
-"""Module host logic to infer data types
+"""Module defines a core enums, protocal and default implementation of datatype infer strategy
 
-    Decent amount of inspiration from lux
+Defines 2 Enum -> ChartMeDataType & ChartMeDataTypeMetaType the normalize metadata
+Additionally, defines the 'InferedDataTypes' that get referenced downstream to the assembler
 
+    Typical usage example:
+
+    infer = InferDataTypeStrategyDefault.datatype_infer_strategy(df, cols)
+    infer_dtypes = infer.infer_datatypes() #return an InferedDataTypes
 """
 
 from dataclasses import dataclass
 from typing import Protocol, Tuple, List, Optional, Type, Dict
 import pandas as pd
 
+# TODO think about a reorganizing into seperate module
 from enum import Enum
 
 class ChartMeDataType(Enum):
+    """Defines Normalized Datatypes -> Floats, Integers, Temporal, Nominal, Not Supported"""
     FLOATS = 'F' #-> Metrics Avg/Media, etc... 
     INTEGER = 'I' #-> Hybrid Datatypes Numerical or seen As Categorical 
     TEMPORAL = 'T', #-> this lead to 'O' otherwise use
     NOMINAL = 'N',
     NOT_SUPPORTED_TYPE = 'NA'
 
-#Idea 2 steps -> DataType + DataTypeMetaType -> rules for visualizations
 class ChartMeDataTypeMetaType(Enum):
+    """Defines Normalized Metadata about Datatypes 
+
+Defines Key, Boolean, Quantitative, Categorical High Cardinality, 
+Categorical Low Cardinality, Temporal, Not Supported
+"""
     KEY = 'K', #-> map to CountD
     BOOLEAN = 'B', #-> Context Aware
     QUANTITATIVE = 'Q', #-> Floats
@@ -27,19 +38,21 @@ class ChartMeDataTypeMetaType(Enum):
     TEMPORAL = 'T',
     NOT_SUPPORTED_TYPE = 'NA'
 
-# TODO Need to return a dataclass
+
 @dataclass
 class InferedDataTypes():
+    """Core Object Returned for Assembler - column level specifications"""
     preaggregated: bool
     chart_me_data_types: Dict[str, ChartMeDataType]
     chart_me_data_types_meta: Dict[str, ChartMeDataTypeMetaType]
 
 class InferDataTypeStrategy(Protocol):
+    """Defines protocol for InferDataTypeStrategy - requires infer_datatypes"""
     def infer_datatypes(self) -> InferedDataTypes:
         raise NotImplementedError
 
 class InferDataTypeStrategyDefault():
-
+    """Default logic to specificy metadata to drive chart assembly logic"""
     def __init__(self, df:pd.DataFrame, cols:List[str], **kwargs):
         self.df = df
         self.cols = cols
