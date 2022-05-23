@@ -5,3 +5,4 @@ notes.txt
 docs/build/
 *.ipynb_checkpoints
 *~$notes_Requirements.xlsx
+dist/
