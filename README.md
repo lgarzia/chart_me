@@ -1,4 +1,4 @@
-# _Chart Me_ Charting the keeps you in the EDA flow
+# _Chart Me_ Charting that keeps you in the EDA flow
 
 ---
 
