@@ -20,4 +20,4 @@ ce.chart_me(df, 'col_1', 'col_2') #<-- reads as c-e-chart_me
 
 ```
 
-![example](..\docs\source_static\Example_Screenshot.png)
+![example](https://github.com/lgarzia/chart_me/blob/master/docs/source/_static/Example_Screenshot.png?raw=true)
