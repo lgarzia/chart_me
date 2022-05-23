@@ -1,16 +1,18 @@
 """A collection of custom errors used in Chart Me
-#https://www.programiz.com/python-programming/user-defined-exception
-#https://www.programiz.com/python-programming/user-defined-exception
 
-Default behavior excepts a message
+helpful url found here: https://www.programiz.com/python-programming/user-defined-exception
+reminder: default behavior accepts a message
 """
 class ColumnDoesNotExistsError(Exception):
+    """Implementation to track if column not found in pandas"""
     pass
 
 class ColumnAllNullError(Exception):
+    """Implementation of error if column is all nulls"""
     pass
 
 class ColumnTooManyNullsError(Exception):
+    """Implementation of error if columns has too many nulls"""
 
     def __init__(self, null_rate, message="Null Rate below Threshold"):
         self.null_rate = null_rate
@@ -21,4 +23,5 @@ class ColumnTooManyNullsError(Exception):
         return f'{self.null_rate} calculated --> {self.message}'
 
 class InsufficientValidColumnsError(Exception):
+    """Implementation of error if there's no valid columns to chart"""
     pass

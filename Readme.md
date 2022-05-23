@@ -1,8 +1,8 @@
-# Welcome to _Chart Me_ Library - Package ReadMe
+# _Chart Me_ - Charting the keeps you in the EDA flow
 
-This package is inspired by desire to speed up my EDA process in Python.
-The big idea is creating a Tableau like experience within Python Jupyter Notebook.
-For instance - in Tableau - I can add two pills and chart is auto-generated.
+---
+
+Chart Me is a high level charting library designed to expedite the Exploratory Data Analyis Process. There's a few automated eda tools like [sweet viz](https://pypi.org/project/sweetviz/) that give a great initial set of visualizations. [lux](https://github.com/lux-org/lux) is a great tool to leverage, which I recommend as an AI assistance type feel. What I wanted was a fast charting tool when I was digging in a bit. Leveraging Tableau is great - excepts it's a walled garden software. The other alternative is hand-writing Altair code, which takes me out of the flow from Data Mining to Software development...Chart Me serves to keep you in the data analytics flow of discovery in Python environment.
 
 ## Installation
 
@@ -10,7 +10,7 @@ For instance - in Tableau - I can add two pills and chart is auto-generated.
 $ pip install chart_me
 ```
 
-## Usage
+## Simple Usage
 
 `chart_me` used to quickly generate visualizations during eda process
 
@@ -20,17 +20,4 @@ ce.chart_me(df, 'col_1', 'col_2') #<-- reads as c-e-chart_me
 
 ```
 
-## Motivation
-
-Results is a series of chart with sensible defaults based on datatypes
-
-The closest library I found is [LUX](https://github.com/lux-org/lux) which is a great library. I find it's default a bit
-unhelpful for the most parts; it has a feature of specifying column of interest.
-
-I wanted a solution that's a little more intuitive and keeps me in the flow of eda.
-
-I'm also a **huge** fan of [SWEET VIZ](https://pypi.org/project/sweetviz/). As I start my
-eda process with a sweet viz kickout; From here, my intent is to leverage _Chart Me_ and lux to quickly work through the eda process.
-
-**Altair:** Altair is an absolutely brilliant data visualization package. I'm a big fan of the javascript based libraries. The ultimate motivation for chart_me is to
-speed up the altair scripting. Writing altair scripts everytime I want a visual is painful. I didn't want to create a module of one off visualizations - like; give me a pareto chart. Chart Me should provide my usual libraries.
+![example](..\docs\source_static\Example_Screenshot.png)
