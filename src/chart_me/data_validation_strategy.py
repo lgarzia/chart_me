@@ -16,8 +16,8 @@ from chart_me.errors import ColumnAllNullError, ColumnDoesNotExistsError, Column
 
 class ValidateColumnStrategy(Protocol):
     """Protocol Definition for ValidateColumnStrategy"""
-    def validate_column(self, df:pd.DataFrame, col: str) -> bool:
-        raise NotImplementedError
+    def validate_column(self) -> bool:
+        ...
 
 
 class ValidateColumnStrategyDefault:
@@ -29,11 +29,11 @@ class ValidateColumnStrategyDefault:
         null_rate: A decimal indicating what percent of null entries in column is ok
     """
     null_rate:float = .95 #default check
-    def __init__(self, df: pd.DataFrame, col:str, *, null_rate:float = .95):
+    def __init__(self, df: pd.DataFrame, col:str, *, override_null_rate:float = .95):
         """Init of instance with ability to override class null_rate"""
         self.df = df 
         self.col =col
-        ValidateColumnStrategyDefault.null_rate = .95
+        ValidateColumnStrategyDefault.null_rate = override_null_rate
 
     def validate_column(self)-> bool:
         """Logic the evaluate column

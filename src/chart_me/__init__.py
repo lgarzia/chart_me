@@ -5,7 +5,7 @@
     ce.chart_me(df, col1, col2...)
 """
 
-__version__="0.1"
+__version__="0.1.0"
 
 
 from chart_me.chart_me_logic import chart_me #makes function top level

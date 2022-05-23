@@ -7,13 +7,13 @@ See supporting documentation that discusses the rules engine.
 
     charts = assemble_bivariate_charts(df, [col1, col2], infered_data_types)
 """
-from typing import List, Optional
+from typing import List, Optional, Union
 import pandas as pd
 import altair as alt
 from chart_me.datatype_infer_strategy import InferedDataTypes, ChartMeDataTypeMetaType
 from chart_me.pandas_util import pd_group_me, pd_truncate_date
 
-def assemble_bivariate_charts(df:pd.DataFrame, cols:List[str], infered_data_types:InferedDataTypes, **kwargs)-> List[alt.Chart. alt.HConcatChart]:
+def assemble_bivariate_charts(df:pd.DataFrame, cols:List[str], infered_data_types:InferedDataTypes, **kwargs)-> List[Union[alt.Chart, alt.HConcatChart]]:
     """Delegated Function to Manage Bivariate Use Cases
 
     Args:
