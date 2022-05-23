@@ -9,6 +9,9 @@ license = {file = "LICENSE"}
 classifiers = ["License :: OSI Approved :: MIT License"]
 dynamic = ["version", "description"]
 dependencies = ['pandas', 'altair']
+version = "0.1.0"
+description = "A Charting Library that keeps you in the EDA flow"
+readme = "README.md"
 
 [project.optional-dependencies]
 test = ["pytest", "vega_datasets", "notebook"]
