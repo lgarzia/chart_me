@@ -7,10 +7,10 @@ name = "chart_me"
 authors = [{name = "Luke Garzia", email = "garzia.luke@gmail.com"}]
 license = {file = "LICENSE"}
 classifiers = ["License :: OSI Approved :: MIT License"]
-dynamic = ["version", "description"]
+dynamic = ["version"]
 dependencies = ['pandas', 'altair']
-version = "0.1.0"
 readme = "README.md"
+description = "Charting that keeps you in the EDA flow"
 
 [project.optional-dependencies]
 test = ["pytest", "vega_datasets", "notebook"]
