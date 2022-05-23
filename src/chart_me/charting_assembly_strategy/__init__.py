@@ -11,7 +11,13 @@ dataframe.
     charts = assembler.assemble_charts()
 """
 import imp
-from typing import Protocol, List, Optional, Union
+from typing import List, Union
+import sys
+
+if sys.version_info >= (3, 8):
+    from typing import Protocol
+else:
+    from typing_extensions import Protocol
 import altair as alt
 import pandas as pd
 import warnings

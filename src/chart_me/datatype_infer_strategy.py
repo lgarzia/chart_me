@@ -10,7 +10,13 @@ Additionally, defines the 'InferedDataTypes' that get referenced downstream to t
 """
 
 from dataclasses import dataclass
-from typing import Protocol, Tuple, List, Optional, Type, Dict
+from typing import List, Optional, Dict
+import sys
+
+if sys.version_info >= (3, 8):
+    from typing import Protocol
+else:
+    from typing_extensions import Protocol
 import pandas as pd
 
 # TODO think about a reorganizing into seperate module

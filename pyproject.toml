@@ -8,9 +8,10 @@ authors = [{name = "Luke Garzia", email = "garzia.luke@gmail.com"}]
 license = {file = "LICENSE"}
 classifiers = ["License :: OSI Approved :: MIT License"]
 dynamic = ["version"]
-dependencies = ['pandas', 'altair']
+dependencies = ['pandas', 'altair', 'typing-extensions']
 readme = "README.md"
 description = "Charting that keeps you in the EDA flow"
+requires-python = ">=3.7"
 
 [project.optional-dependencies]
 test = ["pytest", "vega_datasets", "notebook"]
