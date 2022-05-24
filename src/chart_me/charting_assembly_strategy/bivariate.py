@@ -7,13 +7,15 @@ See supporting documentation that discusses the rules engine.
 
     charts = assemble_bivariate_charts(df, [col1, col2], infered_data_types)
 """
+# Standard library imports
 from typing import List, Optional, Union
 
+# Third party imports
 import altair as alt
 import pandas as pd
 
-from chart_me.datatype_infer_strategy import (ChartMeDataTypeMetaType,
-                                              InferedDataTypes)
+# chart_me imports
+from chart_me.datatype_infer_strategy import ChartMeDataTypeMetaType, InferedDataTypes
 from chart_me.pandas_util import pd_group_me, pd_truncate_date
 
 
@@ -98,8 +100,8 @@ def assemble_bivariate_charts(df:pd.DataFrame, cols:List[str], infered_data_type
         df[col_name_t_m_y1] = pd_truncate_date(df, col_name1)
         df[col_name_t_m_y2] = pd_truncate_date(df, col_name2)
         df['__day_diff__'] = (df[col_name1] - df[col_name2]).dt.days
-        from chart_me.charting_assembly_strategy.univariate import \
-            build_histogram
+        # chart_me imports
+        from chart_me.charting_assembly_strategy.univariate import build_histogram
         return_charts.append(build_histogram(df, '__day_diff__'))
         df['_counts_'] = 1
         df = pd_group_me(df, cols=[col_name_t_m_y1, col_name_t_m_y2], agg_dict={'_counts_':['sum']}, make_long_form=True)

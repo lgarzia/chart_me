@@ -4,8 +4,10 @@
     keep Altair logic very simple if possible
 
 """
+# Standard library imports
 from typing import Dict, List, Optional, Union
 
+# Third party imports
 import pandas as pd
 
 

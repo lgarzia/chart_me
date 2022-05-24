@@ -1,7 +1,9 @@
 """Taking inspiration from PyJanitor on testing Pandas Stuff"""
 
+# Third party imports
 import pytest
 
+# chart_me imports
 import chart_me.validate_strategy_configs as vsc
 
 

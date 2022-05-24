@@ -1,9 +1,12 @@
 """contains core chart_me function """
+# Standard library imports
 from typing import List, Type, Union
 
+# Third party imports
 import altair as alt
 import pandas as pd
 
+# chart_me imports
 from chart_me.chart_configs import ChartConfig
 
 

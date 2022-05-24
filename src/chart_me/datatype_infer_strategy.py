@@ -9,18 +9,23 @@ Additionally, defines the 'InferedDataTypes' that get referenced downstream to t
     infer_dtypes = infer.infer_datatypes() #return an InferedDataTypes
 """
 
+# Standard library imports
 import sys
 from dataclasses import dataclass
 from typing import Dict, List, Optional
 
 if sys.version_info >= (3, 8):
+    # Standard library imports
     from typing import Protocol
 else:
+    # Third party imports
     from typing_extensions import Protocol
 
 # TODO think about a reorganizing into seperate module
+# Standard library imports
 from enum import Enum
 
+# Third party imports
 import pandas as pd
 
 
@@ -80,6 +85,7 @@ class InferDataTypeStrategyDefault():
 
     def _get_raw_data_infer_type(self):
         """Apply *some* burden on user to setup DF accordingly"""
+        # Third party imports
         from pandas.api.types import infer_dtype
         map_from_pd_cm = \
         {'string':ChartMeDataType.NOMINAL,
@@ -116,6 +122,7 @@ class InferDataTypeStrategyDefault():
                 if all(data_sans_nulls.apply(lambda x: x.is_integer())):
                     self.col_to_cm_dtypes[col] = ChartMeDataType.INTEGER # * Not casting becasause of pd.nan issue
             if data_type == ChartMeDataType.NOMINAL:
+                # Third party imports
                 from dateutil.parser import ParserError
                 try: 
                     self.df[col] = pd.to_datetime(self.df[col])

@@ -10,20 +10,25 @@ dataframe.
     assembler = AssembleChartsStrategyDefault(df, cols, infer_dtypes)
     charts = assembler.assemble_charts()
 """
+# Standard library imports
 import imp
 import sys
 from typing import List, Union
 
 if sys.version_info >= (3, 8):
+    # Standard library imports
     from typing import Protocol
 else:
     from typing_extensions import Protocol
 
+# Standard library imports
 import warnings
 
+# Third party imports
 import altair as alt
 import pandas as pd
 
+# chart_me imports
 from chart_me.datatype_infer_strategy import ChartMeDataType, InferedDataTypes
 from chart_me.errors import InsufficientValidColumnsError
 

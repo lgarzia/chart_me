@@ -9,17 +9,24 @@ The default implementation leverage module level Custom Exceptions
             #will raise an error if insufficient
             ValidateColumnStrategyDefault.validate_column_strategy(df, c).validate_column() 
 """
+# Standard library imports
 import sys
 
 if sys.version_info >= (3, 8):
+    # Standard library imports
     from typing import Protocol
 else:
     from typing_extensions import Protocol
 
+# Third party imports
 import pandas as pd
 
-from chart_me.errors import (ColumnAllNullError, ColumnDoesNotExistsError,
-                             ColumnTooManyNullsError)
+# chart_me imports
+from chart_me.errors import (
+    ColumnAllNullError,
+    ColumnDoesNotExistsError,
+    ColumnTooManyNullsError,
+)
 
 
 class ValidateColumnStrategy(Protocol):

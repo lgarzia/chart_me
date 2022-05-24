@@ -1,3 +1,7 @@
+# Standard library imports
+import os
+
+# chart_me imports
 import chart_me
 
 
