@@ -1,9 +1,11 @@
 """Taking inspiration from PyJanitor on testing Pandas Stuff"""
-from cmath import exp
-from ctypes.wintypes import FLOAT
-from unittest import result
-import chart_me.validate_strategy_configs as vsc
+
+# Third party imports
 import pytest
+
+# chart_me imports
+import chart_me.validate_strategy_configs as vsc
+
 
 def test_column_does_not_exist_error(conftest_basic_dataframe):
     df = conftest_basic_dataframe

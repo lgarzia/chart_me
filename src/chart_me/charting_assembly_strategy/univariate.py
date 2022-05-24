@@ -7,10 +7,16 @@ See supporting documentation that discusses the rules engine.
 
     charts = assemble_univariate_charts(df, [col1], infered_data_types)
 """
+# Standard library imports
 from typing import List, Optional, Union
-import pandas as pd
+
+# Third party imports
 import altair as alt
-from chart_me.datatype_infer_strategy import InferedDataTypes, ChartMeDataTypeMetaType
+import pandas as pd
+
+# chart_me imports
+from chart_me.datatype_infer_strategy import ChartMeDataTypeMetaType, InferedDataTypes
+
 
 def assemble_univariate_charts(df:pd.DataFrame, cols:List[str], infered_data_types:InferedDataTypes, **kwargs)-> List[Union[alt.Chart, alt.HConcatChart]]:
     """Delegated Function to Manage Univariate Use Cases
@@ -38,11 +44,13 @@ def assemble_univariate_charts(df:pd.DataFrame, cols:List[str], infered_data_typ
     elif (col_MT == ChartMeDataTypeMetaType.KEY):
         return_charts.append(build_hbar_agg(df.head(), col_name, 'count()'))
     elif (col_MT != ChartMeDataTypeMetaType.TEMPORAL):
+        # chart_me imports
         from chart_me.pandas_util import pd_group_me
         agg_dict = {f"{col_name}" : ['count']} 
         df = pd_group_me(df, col_name, agg_dict)
         return_charts.append(build_hbar_agg(df.head(), col_name, df.columns[-1]))
     elif (col_MT == ChartMeDataTypeMetaType.TEMPORAL):
+        # chart_me imports
         from chart_me.pandas_util import pd_group_me, pd_truncate_date
         temp_col_name = f'{col_name}_ym_temp' 
         df[temp_col_name] = pd_truncate_date(df, col_name)

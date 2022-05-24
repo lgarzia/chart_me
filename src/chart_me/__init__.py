@@ -8,4 +8,5 @@
 __version__="0.1.3"
 
 
-from chart_me.chart_me_logic import chart_me #makes function top level
+# chart_me imports
+from chart_me.chart_me_logic import chart_me  # makes function top level
