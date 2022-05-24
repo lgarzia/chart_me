@@ -15,9 +15,11 @@ if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
     from typing_extensions import Protocol
-    
+
 import pandas as pd
-from chart_me.errors import ColumnAllNullError, ColumnDoesNotExistsError, ColumnTooManyNullsError
+
+from chart_me.errors import (ColumnAllNullError, ColumnDoesNotExistsError,
+                             ColumnTooManyNullsError)
 
 
 class ValidateColumnStrategy(Protocol):

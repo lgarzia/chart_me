@@ -1,7 +1,9 @@
 """contains core chart_me function """
-import pandas as pd
-import altair as alt
 from typing import List, Type, Union
+
+import altair as alt
+import pandas as pd
+
 from chart_me.chart_configs import ChartConfig
 
 

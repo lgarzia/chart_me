@@ -4,8 +4,10 @@
     keep Altair logic very simple if possible
 
 """
-from typing import Union, List, Dict, Optional
+from typing import Dict, List, Optional, Union
+
 import pandas as pd
+
 
  # TODO document function signature
 def pd_group_me(df:pd.DataFrame, cols:Union[List[str], str], agg_dict:Dict, is_temporal:bool=False, make_long_form=False)->pd.DataFrame:

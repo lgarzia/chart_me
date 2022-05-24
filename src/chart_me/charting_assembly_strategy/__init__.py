@@ -11,22 +11,25 @@ dataframe.
     charts = assembler.assemble_charts()
 """
 import imp
-from typing import List, Union
 import sys
+from typing import List, Union
 
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
     from typing_extensions import Protocol
-import altair as alt
-import pandas as pd
+
 import warnings
 
-from chart_me.datatype_infer_strategy import InferedDataTypes, ChartMeDataType
+import altair as alt
+import pandas as pd
+
+from chart_me.datatype_infer_strategy import ChartMeDataType, InferedDataTypes
 from chart_me.errors import InsufficientValidColumnsError
 
-from .univariate import assemble_univariate_charts
 from .bivariate import assemble_bivariate_charts
+from .univariate import assemble_univariate_charts
+
 
 class AssembleChartsStrategy(Protocol):
     """Defines the protocol type for AssembleChartsStrategy 

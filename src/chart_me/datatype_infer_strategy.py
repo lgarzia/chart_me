@@ -9,18 +9,20 @@ Additionally, defines the 'InferedDataTypes' that get referenced downstream to t
     infer_dtypes = infer.infer_datatypes() #return an InferedDataTypes
 """
 
-from dataclasses import dataclass
-from typing import List, Optional, Dict
 import sys
+from dataclasses import dataclass
+from typing import Dict, List, Optional
 
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
     from typing_extensions import Protocol
-import pandas as pd
 
 # TODO think about a reorganizing into seperate module
 from enum import Enum
+
+import pandas as pd
+
 
 class ChartMeDataType(Enum):
     """Defines Normalized Datatypes -> Floats, Integers, Temporal, Nominal, Not Supported"""

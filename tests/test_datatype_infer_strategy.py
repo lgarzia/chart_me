@@ -1,7 +1,9 @@
-import chart_me.datatype_infer_strategy_configs as dti
 import pytest
-from chart_me.datatype_infer_strategy_configs import ChartMeDataType, ChartMeDataTypeMetaType, InferedDataTypes
 
+import chart_me.datatype_infer_strategy_configs as dti
+from chart_me.datatype_infer_strategy_configs import (ChartMeDataType,
+                                                      ChartMeDataTypeMetaType,
+                                                      InferedDataTypes)
 
 #preagg_inputs = "cols,output"
 #preagg_checks = 
@@ -28,7 +30,8 @@ def test_preagg_checks_too_big(conftest_check_agg_dataframe_too_big):
 def test_infer_data_types(ct_df_check_infer_dtypes):
     df = ct_df_check_infer_dtypes
     cols = ct_df_check_infer_dtypes.columns.tolist()
-    from chart_me.datatype_infer_strategy_configs import InferDataTypeStrategyDefault
+    from chart_me.datatype_infer_strategy_configs import \
+        InferDataTypeStrategyDefault
     infer = InferDataTypeStrategyDefault(df, cols)
     results = infer._get_raw_data_infer_type()
     print(results)
@@ -48,7 +51,8 @@ def test_infer_data_types(ct_df_check_infer_dtypes):
 def test_calculate_override_data_infer_type(ct_df_override_dtypes):
     df = ct_df_override_dtypes
     cols = df.columns.tolist()
-    from chart_me.datatype_infer_strategy_configs import InferDataTypeStrategyDefault
+    from chart_me.datatype_infer_strategy_configs import \
+        InferDataTypeStrategyDefault
     infer = InferDataTypeStrategyDefault(df, cols)
     _ = infer._get_raw_data_infer_type()
     results = infer._calculate_override_data_infer_type()
@@ -62,7 +66,8 @@ def test_calculate_override_data_infer_type(ct_df_override_dtypes):
 def test_calculate_data_type_meta(ct_df_calculate_meta_dtypes):
     df = ct_df_calculate_meta_dtypes
     cols = df.columns.tolist()
-    from chart_me.datatype_infer_strategy_configs import InferDataTypeStrategyDefault
+    from chart_me.datatype_infer_strategy_configs import \
+        InferDataTypeStrategyDefault
     infer = InferDataTypeStrategyDefault(df, cols, cardinality_threshold_ratio=.4)
     _ = infer._get_raw_data_infer_type()
     _ = infer._calculate_override_data_infer_type()
@@ -82,7 +87,8 @@ def test_calculate_data_type_meta(ct_df_calculate_meta_dtypes):
 def test_infer_datatype_function_has_protocol(ct_df_calculate_meta_dtypes):
     df = ct_df_calculate_meta_dtypes
     cols = df.columns.tolist()
-    from chart_me.datatype_infer_strategy_configs import InferDataTypeStrategyDefault
+    from chart_me.datatype_infer_strategy_configs import \
+        InferDataTypeStrategyDefault
     infer = InferDataTypeStrategyDefault(df, cols, cardinality_threshold_ratio=.4)
     infer_type = infer.infer_datatypes()
     assert isinstance(infer_type, InferedDataTypes)
@@ -90,7 +96,8 @@ def test_infer_datatype_function_has_protocol(ct_df_calculate_meta_dtypes):
 def test_infer_datatype_function_right_values(ct_df_calculate_meta_dtypes):
     df = ct_df_calculate_meta_dtypes
     cols = df.columns.tolist()
-    from chart_me.datatype_infer_strategy_configs import InferDataTypeStrategyDefault
+    from chart_me.datatype_infer_strategy_configs import \
+        InferDataTypeStrategyDefault
     infer = InferDataTypeStrategyDefault(df, cols, cardinality_threshold_ratio=.4)
     infer_type = infer.infer_datatypes()
     expect = InferedDataTypes(preaggregated=True, 

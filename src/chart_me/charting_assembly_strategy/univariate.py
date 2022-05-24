@@ -8,9 +8,13 @@ See supporting documentation that discusses the rules engine.
     charts = assemble_univariate_charts(df, [col1], infered_data_types)
 """
 from typing import List, Optional, Union
-import pandas as pd
+
 import altair as alt
-from chart_me.datatype_infer_strategy import InferedDataTypes, ChartMeDataTypeMetaType
+import pandas as pd
+
+from chart_me.datatype_infer_strategy import (ChartMeDataTypeMetaType,
+                                              InferedDataTypes)
+
 
 def assemble_univariate_charts(df:pd.DataFrame, cols:List[str], infered_data_types:InferedDataTypes, **kwargs)-> List[Union[alt.Chart, alt.HConcatChart]]:
     """Delegated Function to Manage Univariate Use Cases
