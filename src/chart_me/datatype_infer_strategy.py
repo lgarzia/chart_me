@@ -62,11 +62,13 @@ class InferedDataTypes():
 class InferDataTypeStrategy(Protocol):
     """Defines protocol for InferDataTypeStrategy - requires infer_datatypes"""
     def infer_datatypes(self) -> InferedDataTypes:
+        """Only Method Required"""
         raise NotImplementedError
 
 class InferDataTypeStrategyDefault():
     """Default logic to specificy metadata to drive chart assembly logic"""
     def __init__(self, df:pd.DataFrame, cols:List[str], **kwargs):
+        """set instances variable"""
         self.df = df
         self.cols = cols
         self.preaggregated: Optional[bool] = None
@@ -160,6 +162,7 @@ class InferDataTypeStrategyDefault():
                 self.col_to_cm_dtypes_meta[col] = ChartMeDataTypeMetaType.CATEGORICAL_HIGH_CARDINALITY
     
     def _calculate_data_type_meta(self):
+        """wrapper to iterate over all columns"""
         for col, val in self.col_to_cm_dtypes.items():
             self._get_data_infer_meta_type_col(col)
         return self.col_to_cm_dtypes_meta

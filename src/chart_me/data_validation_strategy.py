@@ -32,6 +32,7 @@ from chart_me.errors import (
 class ValidateColumnStrategy(Protocol):
     """Protocol Definition for ValidateColumnStrategy"""
     def validate_column(self) -> bool:
+        """Only required method"""
         ...
 
 

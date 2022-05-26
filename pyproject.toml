@@ -14,7 +14,7 @@ description = "Charting that keeps you in the EDA flow"
 requires-python = ">=3.7"
 
 [project.optional-dependencies]
-test = ["pytest", "vega_datasets", "notebook", "pre-commit"]
+test = ["pytest", "vega_datasets", "notebook", "pre-commit", "interrogate"]
 doc = ["sphinx", "myst-nb", "sphinx-rtd-theme", "sphinx-autoapi"]
 linter = ["mypy", "black", "flake8", "isort"]
 
