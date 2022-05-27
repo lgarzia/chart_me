@@ -6,3 +6,9 @@ docs/build/
 *.ipynb_checkpoints
 *~$notes_Requirements.xlsx
 dist/
+venv
+
+# Unit test / coverate reports
+.coverage
+.tox
+

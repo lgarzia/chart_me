@@ -20,7 +20,7 @@ See [Read the Docs](https://chart-me.readthedocs.io/en/latest/index.html) for mo
 ## Installation
 
 ```bash
-$ pip install chart_me
+$ pip install chart-me
 ```
 
 ## Simple Usage
