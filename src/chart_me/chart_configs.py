@@ -22,7 +22,11 @@ from chart_me.datatype_infer_strategy import (
 @dataclass
 class ChartConfig:
     """Default Instance of Chart Config"""
-    validate_column_strategy: Type[ValidateColumnStrategy] = ValidateColumnStrategyDefault
-    datatype_infer_strategy: Type[InferDataTypeStrategy] = InferDataTypeStrategyDefault
-    assemble_charts_strategy: Type[AssembleChartsStrategy] = AssembleChartsStrategyDefault
 
+    validate_column_strategy: Type[
+        ValidateColumnStrategy
+    ] = ValidateColumnStrategyDefault
+    datatype_infer_strategy: Type[InferDataTypeStrategy] = InferDataTypeStrategyDefault
+    assemble_charts_strategy: Type[
+        AssembleChartsStrategy
+    ] = AssembleChartsStrategyDefault

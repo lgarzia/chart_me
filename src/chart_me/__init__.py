@@ -1,12 +1,12 @@
-"""Imports core chart_me function for end users. 
+"""Imports core chart_me function for end users.
 
     Typical usage example:
     import chart_me as ce
     ce.chart_me(df, col1, col2...)
 """
 
-__version__="0.1.3"
+__version__ = "0.1.3"
 
 
 # chart_me imports
-from chart_me.chart_me_logic import chart_me  # makes function top level
+from chart_me.chart_me_logic import chart_me  # noqa: F401
