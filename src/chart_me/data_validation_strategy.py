@@ -71,11 +71,11 @@ class ValidateColumnStrategyDefault:
         except KeyError:
             raise ColumnDoesNotExistsError(f"{self.col}")
 
-        if self.col.isnull().all():
+        if self.df[self.col].isnull().all():
             raise ColumnAllNullError(f"{self.col}")
 
         if (
-            self.col.isnull().sum() / len(self.col)
+            self.df[self.col].isnull().sum() / len(self.col)
             > ValidateColumnStrategyDefault.null_rate
         ):
             raise ColumnTooManyNullsError(

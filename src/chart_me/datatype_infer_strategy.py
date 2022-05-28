@@ -140,7 +140,7 @@ class InferDataTypeStrategyDefault:
                     )  # * Not casting becasause of pd.nan issue
             if data_type == ChartMeDataType.NOMINAL:
                 # Third party imports
-                from dateutil.parser import ParserError
+                from dateutil.parser import ParserError  # type: ignore
 
                 try:
                     self.df[col] = pd.to_datetime(self.df[col])
