@@ -67,7 +67,7 @@ class ValidateColumnStrategyDefault:
         """
         # check is exists
         try:
-            self.col = self.df[self.col]
+            _ = self.df[self.col]
         except KeyError:
             raise ColumnDoesNotExistsError(f"{self.col}")
 
