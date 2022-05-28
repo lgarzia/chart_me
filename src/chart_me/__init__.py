@@ -5,7 +5,7 @@
     ce.chart_me(df, col1, col2...)
 """
 
-__version__ = "0.1.3"
+__version__ = "0.1.4"
 
 
 # chart_me imports

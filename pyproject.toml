@@ -16,7 +16,7 @@ requires-python = ">=3.7"
 [project.optional-dependencies]
 test = ["pytest", "vega_datasets", "notebook",
  "pre-commit", "interrogate", "pytest-cov", "tox", 
- "mypy", "black", "flake8", "isort"]
+ "mypy", "black", "flake8", "isort", "bump2version"]
 doc = ["sphinx", "myst-nb", "sphinx-rtd-theme", "sphinx-autoapi"]
 
 
