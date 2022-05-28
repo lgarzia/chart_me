@@ -1,4 +1,4 @@
-*.mypy_cache/
+
 notes.txt
 *.pyc
 *.pytest_cache/
@@ -11,4 +11,4 @@ venv
 # Unit test / coverate reports
 .coverage
 .tox
-
+*.mypy_cache/
