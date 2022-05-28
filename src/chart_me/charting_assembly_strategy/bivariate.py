@@ -56,14 +56,16 @@ def assemble_bivariate_charts(
     )  # doesn't impact behavior for univariate/bivariate
     return_charts = []
 
-    if set([col_MT1, col_MT2]) == set(
-        [ChartMeDataTypeMetaType.QUANTITATIVE, ChartMeDataTypeMetaType.QUANTITATIVE]
-    ):
+    if {col_MT1, col_MT2} == {
+        ChartMeDataTypeMetaType.QUANTITATIVE,
+        ChartMeDataTypeMetaType.QUANTITATIVE,
+    }:
         return_charts.append(build_scatter_plot(df, col_name1, col_name2))
 
-    elif set([col_MT1, col_MT2]) == set(
-        [ChartMeDataTypeMetaType.QUANTITATIVE, ChartMeDataTypeMetaType.KEY]
-    ):
+    elif {col_MT1, col_MT2} == {
+        ChartMeDataTypeMetaType.QUANTITATIVE,
+        ChartMeDataTypeMetaType.KEY,
+    }:
         col_name_x, col_name_y = (
             [col_name2, col_name1]
             if col_MT1 == ChartMeDataTypeMetaType.KEY
@@ -71,12 +73,10 @@ def assemble_bivariate_charts(
         )
         return_charts.append(build_hbar_value(df.head(), col_name_x, col_name_y))
 
-    elif set([col_MT1, col_MT2]) == set(
-        [
-            ChartMeDataTypeMetaType.QUANTITATIVE,
-            ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY,
-        ]
-    ):
+    elif {col_MT1, col_MT2} == {
+        ChartMeDataTypeMetaType.QUANTITATIVE,
+        ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY,
+    }:
         col_name_n, col_name_q = (
             [col_name1, col_name2]
             if col_MT1 == ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY
@@ -96,9 +96,10 @@ def assemble_bivariate_charts(
                 col_name_x=col_name_q,
             )
         )
-    elif set([col_MT1, col_MT2]) == set(
-        [ChartMeDataTypeMetaType.QUANTITATIVE, ChartMeDataTypeMetaType.TEMPORAL]
-    ):
+    elif {col_MT1, col_MT2} == {
+        ChartMeDataTypeMetaType.QUANTITATIVE,
+        ChartMeDataTypeMetaType.TEMPORAL,
+    }:
         col_name_t, col_name_q = (
             [col_name1, col_name2]
             if col_MT1 == ChartMeDataTypeMetaType.TEMPORAL
@@ -113,20 +114,19 @@ def assemble_bivariate_charts(
         return_charts.append(
             build_hconcat_temp_charts(df, col_name_t_m_y, col_name_q, "measures")
         )
-    elif set([col_MT1, col_MT2]) == set(
-        [ChartMeDataTypeMetaType.KEY, ChartMeDataTypeMetaType.KEY]
-    ):
+    elif {col_MT1, col_MT2} == {
+        ChartMeDataTypeMetaType.KEY,
+        ChartMeDataTypeMetaType.KEY,
+    }:
         df["quantity"] = 1
         df["label"] = df[col_name1].astype(str) + "-" + df[col_name2].astype(str)
         return_charts.append(
             build_hbar_value(df.head(n=20), col_name_x="quantity", col_name_y="label")
         )
-    elif set([col_MT1, col_MT2]) == set(
-        [
-            ChartMeDataTypeMetaType.KEY,
-            ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY,
-        ]
-    ):
+    elif {col_MT1, col_MT2} == {
+        ChartMeDataTypeMetaType.KEY,
+        ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY,
+    }:
         col_name_n, col_name_k = (
             [col_name1, col_name2]
             if col_MT1 == ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY
@@ -142,9 +142,10 @@ def assemble_bivariate_charts(
                 col_name_x=col_name_k,
             )
         )
-    elif set([col_MT1, col_MT2]) == set(
-        [ChartMeDataTypeMetaType.KEY, ChartMeDataTypeMetaType.TEMPORAL]
-    ):
+    elif {col_MT1, col_MT2} == {
+        ChartMeDataTypeMetaType.KEY,
+        ChartMeDataTypeMetaType.TEMPORAL,
+    }:
         col_name_t, col_name_k = (
             [col_name1, col_name2]
             if col_MT1 == ChartMeDataTypeMetaType.TEMPORAL
@@ -159,12 +160,10 @@ def assemble_bivariate_charts(
         return_charts.append(
             build_hconcat_temp_charts(df, col_name_t_m_y, col_name_k, "measures")
         )
-    elif set([col_MT1, col_MT2]) == set(
-        [
-            ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY,
-            ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY,
-        ]
-    ):
+    elif {col_MT1, col_MT2} == {
+        ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY,
+        ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY,
+    }:
         df["_counts_"] = 1
         df = pd_group_me(
             df,
@@ -173,12 +172,10 @@ def assemble_bivariate_charts(
             make_long_form=True,
         )
         return_charts.append(build_heatmap(df, col_name1, col_name2, "_counts_"))
-    elif set([col_MT1, col_MT2]) == set(
-        [
-            ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY,
-            ChartMeDataTypeMetaType.TEMPORAL,
-        ]
-    ):
+    elif {col_MT1, col_MT2} == {
+        ChartMeDataTypeMetaType.CATEGORICAL_LOW_CARDINALITY,
+        ChartMeDataTypeMetaType.TEMPORAL,
+    }:
         col_name_t, col_name_n = (
             [col_name1, col_name2]
             if col_MT1 == ChartMeDataTypeMetaType.TEMPORAL
@@ -196,9 +193,10 @@ def assemble_bivariate_charts(
         return_charts.append(
             build_hconcat_temp_lc_charts(df, col_name_t_m_y, col_name_n, "_counts_")
         )
-    elif set([col_MT1, col_MT2]) == set(
-        [ChartMeDataTypeMetaType.TEMPORAL, ChartMeDataTypeMetaType.TEMPORAL]
-    ):
+    elif {col_MT1, col_MT2} == {
+        ChartMeDataTypeMetaType.TEMPORAL,
+        ChartMeDataTypeMetaType.TEMPORAL,
+    }:
         col_name_t_m_y1, col_name_t_m_y2 = [f"{col_name1}_m_y", f"{col_name2}_m_y"]
         df[col_name_t_m_y1] = pd_truncate_date(df, col_name1)
         df[col_name_t_m_y2] = pd_truncate_date(df, col_name2)

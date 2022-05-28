@@ -15,7 +15,7 @@ See [Read the Docs](https://chart-me.readthedocs.io/en/latest/index.html) for mo
 
 ## **Usage Warnings**
 
-\_Consider this is beta/proof-of-concept mode at this time. Limited to univariate & bivariate charts and doesn't support geographical data and is lightly tested.
+Currently a proof-of-concept mode at this time. Limited to univariate & bivariate charts and doesn't support geographical data and is lightly tested.
 
 ## Installation
 
