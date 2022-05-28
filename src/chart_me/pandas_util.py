@@ -37,9 +37,10 @@ def pd_group_me(
     df = df.groupby(cols).agg(agg_dict).reset_index()
     key_cols = [f"{k}-{i}" for k in agg_dict.keys() for i in agg_dict[k]]
     sort_key = [key_cols][0]
-    df.columns = ([[cols]] if isinstance(cols, str) else [cols]) + [key_cols]
+
+    df.columns = ([cols] if isinstance(cols, str) else cols) + key_cols
     if is_temporal:
-        df = df.sort_values([[cols]], ascending=True)
+        df = df.sort_values([cols] if isinstance(cols, str) else cols, ascending=True)
     else:
         df = df.sort_values(sort_key, ascending=False)
     if make_long_form:

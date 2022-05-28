@@ -3,7 +3,7 @@
 ---
 
 Chart Me is a high-level charting library designed to expedite the Exploratory Data Analysis Process(eda). There are a few automated eda tools like [sweet viz](https://pypi.org/project/sweetviz/) that give a great initial set of visualizations. [lux](https://github.com/lux-org/lux) is a great tool to leverage - which gives a feel of AI assistance - but not always on the mark. The other alternative is hand-writing Altair code, which takes me out of the EDA flow looking up syntax or building functions..._Chart Me_ serves to keep you in the data analytics flow of discovery by keeping visualization commands to **one function** to remember.
-[![v0.1.4](https://img.shields.io/pypi/v/chart_me.svg)](https://pypi.org/project/chart_me/)
+[![v0.1.5](https://img.shields.io/pypi/v/chart_me.svg)](https://pypi.org/project/chart_me/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
