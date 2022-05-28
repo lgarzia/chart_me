@@ -18,9 +18,6 @@ jobs:
       - checkout #checkout out source code
       - python/install-packages:
         pkg-manager: pip
-      - python/install-packages:
-        pip-dependency-file: pyproject.toml
-        pkg-manager: pip
       - run:
           name: Run tests
           command: python -m pytest
