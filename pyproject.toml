@@ -8,10 +8,10 @@ authors = [{name = "Luke Garzia", email = "garzia.luke@gmail.com"}]
 license = {file = "LICENSE"}
 classifiers = ["License :: OSI Approved :: MIT License"]
 dynamic = ["version"]
-dependencies = ['pandas', 'altair', 'typing-extensions']
+dependencies = ['pandas', 'altair', 'typing-extensions', 'typer']
 readme = "README.md"
 description = "Charting that keeps you in the EDA flow"
-requires-python = ">=3.7"
+requires-python = ">=3.11"
 
 [project.optional-dependencies]
 test = ["pytest", "vega_datasets", "notebook",
@@ -19,6 +19,8 @@ test = ["pytest", "vega_datasets", "notebook",
  "mypy", "black", "flake8", "isort", "bump2version", "flake8-comprehensions", "types-python-dateutil"]
 doc = ["sphinx", "myst-nb", "sphinx-rtd-theme", "sphinx-autoapi"]
 
+[project.scripts]
+chart_me = "chart_me.__main__:main"
 
 [project.urls]
 Home = "https://github.com/lgarzia/chart_me"
