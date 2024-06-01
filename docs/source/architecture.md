@@ -1,7 +1,5 @@
 # Architecture
 
----
-
 ## Logical Flow
 
 **Placeholder**
