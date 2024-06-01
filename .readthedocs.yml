@@ -4,12 +4,11 @@ version: 2
 # Image to use
 build:
   os: ubuntu-20.04
-  tools:
-    python:
-      version: 3.12
-      install:
-        - requirements: docs/source/requirements.txt
-        - method: pip
-          path: .
+  tools: python:"3.12"
+python:
+  install:
+    - requirements: docs/source/requirements.txt
+    - method: pip
+      path: .
 sphinx:
   configuration: docs/source/conf.py
