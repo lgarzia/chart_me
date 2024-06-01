@@ -11,7 +11,7 @@ dynamic = ["version"]
 dependencies = ['pandas', 'altair', 'typing-extensions', 'typer']
 readme = "README.md"
 description = "Charting that keeps you in the EDA flow"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 
 [project.optional-dependencies]
 test = ["pytest", "vega_datasets", "notebook",
